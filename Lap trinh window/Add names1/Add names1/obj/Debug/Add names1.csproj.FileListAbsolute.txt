@@ -1,0 +1,10 @@
+D:\Hoc\Lap trinh window\Add names1\Add names1\bin\Debug\Add names1.exe.config
+D:\Hoc\Lap trinh window\Add names1\Add names1\bin\Debug\Add names1.exe
+D:\Hoc\Lap trinh window\Add names1\Add names1\bin\Debug\Add names1.pdb
+D:\Hoc\Lap trinh window\Add names1\Add names1\obj\Debug\Add names1.csproj.AssemblyReference.cache
+D:\Hoc\Lap trinh window\Add names1\Add names1\obj\Debug\Add_names1.Form1.resources
+D:\Hoc\Lap trinh window\Add names1\Add names1\obj\Debug\Add_names1.Properties.Resources.resources
+D:\Hoc\Lap trinh window\Add names1\Add names1\obj\Debug\Add names1.csproj.GenerateResource.cache
+D:\Hoc\Lap trinh window\Add names1\Add names1\obj\Debug\Add names1.csproj.CoreCompileInputs.cache
+D:\Hoc\Lap trinh window\Add names1\Add names1\obj\Debug\Add names1.exe
+D:\Hoc\Lap trinh window\Add names1\Add names1\obj\Debug\Add names1.pdb

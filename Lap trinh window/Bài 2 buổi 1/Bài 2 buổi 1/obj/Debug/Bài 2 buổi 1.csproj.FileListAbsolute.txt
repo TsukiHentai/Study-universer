@@ -1,0 +1,19 @@
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\bin\Debug\Bài 2 buổi 1.exe.config
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\bin\Debug\Bài 2 buổi 1.exe
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\bin\Debug\Bài 2 buổi 1.pdb
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài_2_buổi_1.Form1.resources
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài_2_buổi_1.Properties.Resources.resources
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.csproj.GenerateResource.cache
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.csproj.CoreCompileInputs.cache
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.exe
+D:\Hoc\Lập trình window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.pdb
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.csproj.AssemblyReference.cache
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài_2_buổi_1.Form1.resources
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài_2_buổi_1.Properties.Resources.resources
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.csproj.GenerateResource.cache
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.csproj.CoreCompileInputs.cache
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.exe
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\obj\Debug\Bài 2 buổi 1.pdb
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\bin\Debug\Bài 2 buổi 1.exe.config
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\bin\Debug\Bài 2 buổi 1.exe
+D:\Hoc\Lap trinh window\Bài 2 buổi 1\Bài 2 buổi 1\bin\Debug\Bài 2 buổi 1.pdb

@@ -1,0 +1,10 @@
+D:\Hoc\Lập trình window\Add names\Add names\bin\Debug\Add names.exe.config
+D:\Hoc\Lập trình window\Add names\Add names\bin\Debug\Add names.exe
+D:\Hoc\Lập trình window\Add names\Add names\bin\Debug\Add names.pdb
+D:\Hoc\Lập trình window\Add names\Add names\obj\Debug\Add names.csproj.AssemblyReference.cache
+D:\Hoc\Lập trình window\Add names\Add names\obj\Debug\Add_names.Form1.resources
+D:\Hoc\Lập trình window\Add names\Add names\obj\Debug\Add_names.Properties.Resources.resources
+D:\Hoc\Lập trình window\Add names\Add names\obj\Debug\Add names.csproj.GenerateResource.cache
+D:\Hoc\Lập trình window\Add names\Add names\obj\Debug\Add names.csproj.CoreCompileInputs.cache
+D:\Hoc\Lập trình window\Add names\Add names\obj\Debug\Add names.exe
+D:\Hoc\Lập trình window\Add names\Add names\obj\Debug\Add names.pdb
