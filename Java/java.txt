@@ -1,0 +1,179 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
+public class Timduongdi {
+
+    private Result rs;
+    private Thread t;
+    private int m, n, i, j, d, s, max;
+    private int[][] matran = new int[50][50];
+    private int inx, iny, outx, outy;
+    private int[] x = new int[50];
+    private int[] y = new int[50];
+    private int[][] c = new int[100][100];
+    private int[][] chuaxet = new int[50][50];
+    private int[] dx = {0, -1, 0, 0, 1};
+    private int[] dy = {0, 0, 1, -1, 0};
+    private int str[] = new int[200];
+
+    public Timduongdi() {
+        m = n = 10;
+        try {
+            FileInputStream f = new FileInputStream("out.txt");
+            int size, con, dem = 0;
+            try {
+                size = f.available();
+                for (i = 0; i < size; i++) {
+                    con = f.read();
+                    if (con != 0 && con != 32 && con != 10 && con != 13) {
+                        str[dem] = con - 48;
+                        dem++;
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Timduongdi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Timduongdi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                matran[i][j] = str[i * 10 + j];
+                System.out.print(matran[i][j]);
+            }
+            System.out.println();
+        }
+        this.chuanbi();
+    }
+    (Ta?o gia? tri? ban ?â?u)
+
+    private void chuanbi() {
+        for (i = 0; i < m; ++i) {
+            for (j = 0; j < n; ++j) {
+                c[i][j] = 0;
+                chuaxet[i][j] = 1;
+            }
+        }
+        c[0][0] = 0;
+        d = 0;
+        max = 200;
+    }
+    (Kiê?m tra ?iê?m tiê?p theo co? pha?i ?iê?m ?ê?n hay không)
+
+    private int ok(int i, int j) {
+        System.out.println(i + "   " + j);
+        if ((i < 0) || (i >= m) || (j < 0) || (j >= n)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    (Ti?m ????ng ?i cho ma trâ?n)
+
+    private void tim(int c[][]) {
+        s = 0;
+        x[0] = outx;//diem den theo toa do x
+        y[0] = outy;//diem den theo toa do y
+        i = outx;
+        j = outy;
+
+        int k;
+        (Ti?m to?a ?ô? x,y cho nh??ng ?iê?m co?n ??a va?o chi? sô? cu?a ma trâ?n c[i][j])
+        while (c[i][j] != 0) {
+            k = c[i][j];//Xac dinh xem buoc truoc minh la phai di theo huong nao
+            i = i - dx[k];//lay lai toa do x cua buoc truoc
+            j = j - dy[k];//lay lai toa do y cua buoc truoc
+            s++;
+            x[s] = i;
+            y[s] = j;
+
+        }
+        //for(int element:x)
+        //System.out.println(x[0]);
+    }
+    (Duyê?t ma trâ?n ?ê? ti?m ????ng ?i ng??n nhâ?t)
+
+    private void search(int i, int j, int dem, int[][] chuaxet) {
+        int[][] cx = new int[50][50];//tao lai mang chuaxet cho moi buoc di
+        for (int g = 0; g < 10; g++) {
+            for (int h = 0; h < 10; h++) {
+                cx[g][h] = chuaxet[g][h];
+            }
+        }
+(kiê?m tra xem ?iê?m tiê?p theo co? pha?i la? ?iê?m ?ê?n)
+        if ((i == outx) && (j == outy)) {
+            if (max > dem) {
+                max = dem;
+                d = 1;
+                try {
+                    tim(c);
+
+                } catch (Exception e) {
+                    System.out.print(e);
+                }
+            }
+        } else {
+
+            cx[inx][iny] = 0;//lam cho diem dau vao da xet roi
+            dem++;
+            for (int k = 1; k <= 4; ++k) {
+                int a = i + dx[k];
+                int b = j + dy[k];
+(kiê?m tra xem ?iê?m tiê?p theo co? ?i tiê?p ????c hay không)
+                if ((ok(a, b)) == 1 && (cx[a][b]) == 1) {
+                    try {
+                        if (matran[a][b] == 0) {
+
+                            c[a][b] = k;
+
+                            cx[a][b] = 0;
+                            search(a, b, dem, cx);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+            }
+        }
+    }
+
+    public Result parsexy(int a, int b) {
+(chuyê?n tha?nh to?a ?ô? cho ?iê?m b??t ?â?u)
+        inx = a / 10;
+        iny = a - inx * 10 - 1;
+        //New a la? nhu?ng sô? chia hê?t cho 10
+        if (a % 10 == 0) {
+            inx--;
+            iny = 9;
+        }
+(chuyê?n tha?nh to?a ?ô? cho ?iê?m kê?t thu?c)
+        outx = b / 10;
+        outy = b - outx * 10 - 1;
+        if (b % 10 == 0) {
+            outx--;
+            outy = 9;
+        }
+        if(matran[inx][iny]==1)
+        {
+            JOptionPane.showMessageDialog(null, "First value is not valid. You should choice again.");
+            return new Result();
+        }
+        else if(matran[outx][outy]==1)
+        {
+            JOptionPane.showMessageDialog(null, "Second value is not valid. You should choice again.");
+            return new Result();
+        }
+        else
+        {
+            this.search(inx, iny, 0, chuaxet);
+            rs = new Result(x, y, s, max);
+            return rs;
+        }       
+        System.out.println(inx);System.out.println(iny);System.out.println(outx);System.out.println(outy);
+    }
+}

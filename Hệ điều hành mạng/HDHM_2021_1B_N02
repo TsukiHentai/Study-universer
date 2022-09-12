@@ -1,0 +1,758 @@
+Hệ điều hành mạng
+
+Nội dung: cài đặt, vận hành, và bảo trì hệ thống Linux
+Tư cách: 3+ (bài tập thực hành, trắc nghiệm)
+Kết thúc môn học: trắc nghiệm
+
+Câu hỏi?
+Cài đặt hệ thống Linux:
+  + Cài trên máy ảo: sử dụng các phần mềm ảo hóa như VMWare, Vbox, Hyper-V,..
+  + Cài trên máy thật: nhẹ hơn, nhanh hơn, nhưng có khả năng làm mất dữ liệu của HDH khác.
+  + Trên window 10: Linux subsystem
+
+Linux Kernel: nhân Linux dùng cho các hệ thống Linux.
+Hệ thống Linux (Linux system): là các hệ thống sử dụng nhân Linux.
+Bản phân phối (Distribution) Linux: là hệ thống gồm có nhân Linux và các chương trình khác để tạo thành một hệ điều hành đầy đủ. Một số bản phân phối Linux phổ biến:
+  + Ubuntu, Debian
+  + Fedora, CentOS, RedHat Enterprise Linux (RHEL)
+  + OpenSuSE, SUSE Enterprise Linux Server (SLES)
+  + Slackware
+
+Một số quy ước về ví dụ khi viết chế độ dòng lệnh:
+  + Với dấu nhắc lệnh kết thúc bằng:
+    > người dùng bình thường
+    # siêu người dùng (root)
+
+Tham gia vào lớp học google classroom bằng cách điền vào mẫu sau:
+https://forms.gle/cjkVWttuaQe7qYWQ7
+
+Yêu cầu về nhà:
+    + Cài đặt một bản phân phối Linux.
+
+Hệ thống tệp tin (filesystems): là cách tổ chức dữ liệu bở hệ điều hành.
+Một số định dạng filesytems phổ biến thường dùng cho Linux:
++ ext3: Được dùng phổ biến trên các hệ thống cũ.
++ ext4: là bản nâng cấp của ext3, cải thiện về hiệu năng. Nó được sử dụng phổ biến trong các hệ thống hiện nay.
++ btrfs: đây là định dạng tương đối mới, có đặc trưng là copy-on-write nên cho phép nó tối ưu hóa việc theo khôi phục lại các trạng thái trước đó (snapshot) của hệ thống.
++ zfs: đây là định dạng của hệ thống Unix.
++ xfs: là định dạng dành cho Linux, đặc biệt có hiệu năng tốt với các tệp tin lớn (VD: CSDL)
+Linux cũng vẫn hỗ trợ các định dạng phát triển cho MS-DOS, và Windows:
++ FAT/FAT32: đây là định dạng từng rất phổ biến, tuy nhiên giới hạn dung lượng tệp tin ở mức 4GB.
++ exFAT: đây là bản mở rộng FAT cho phép lưu trữ tệp tin có dung lượng lớn hơn 4GB.
++ NTFS: đây là định dạng dùng phổ biến ở các hệ điều hành Window.
+
+Một số đặc điểm của hệ thống tệp tin cho Linux:
++ Tên tệp tin/đường dẫn phân biệt giữa chữ hoa và chữ thường.
++ Tên tệp tin/đường dẫn có thể sử dụng các ký tự trừ ký tự / (ký tự \ vẫn được dùng)
++ Hệ thống tệp tin được tổ chức dưới dạng cây thư mục với một thư mục gốc (root directory) ký hiệu là /
++ Các phân vùng có thể được ánh xạ vào một nút trên cây thư mục (mount).
++ Có một số thư mục và mục đích sử dụng của nó:
+  - /boot - là chứa các thành phần khởi động hệ thống (bootloader, kernel)
+  - /bin - chứa các chương trình cần thực thi
+  - /lib - chứa các thư viện
+  - /usr - chứa các chương trình, thư viện,... sử dụng bởi người dùng.
+  - /var - chứa các dữ liệu thường xuyên thay đổi (VD: CSDL, logs, dữ liệu cho máy chủ web).
+  - /etc - chứa các tệp cấu hình cho hệ thống và các phần mềm.
+  - /home - chứa các dữ liệu của người dùng.
+  - /proc - chứa các liên kết đến các tiến trình (process).
+  - /dev - chứa các liên kết đến thiết bị phần cứng (VD: thiết bị ngoại vi).
++ Đường dẫn tói các tệp tin/thư mục:
+  - Đường dẫn tuyệt đối: là đường dẫn bắt đầu từ thư mục gốc (bắt đầu bằng /)
+    + Ví dụ: /home/nguyen/thong-tin.txt
+  - Đường dẫn tương đối: là đường dẫn bắt đầu từ thư mục hiện tại (working directory).
+    + Ví dụ: thong-tin.txt
+             ./nguyen/thong-tin.txt
+    + Thư mục đại diện đặc biệt:
+       . (dấu chấm) đại diện cho thư mục hiện tại.
+       .. (hai dấu chấm) đại diện cho thư mục cha.
+    + Ví dụ:
+             ../../thong-tin.txt
+    + Các ký tự đặc biệt: thì sử dụng \ đặt ở trước.
+      Ví dụ: "./thông tin.txt"
+             ./thông\ tin.txt
++ Chú ý:
+    + Các tệp tin, thư mục bắt đầu bằng dấu chấm '.' được coi là tệp tin/thư mục ẩn.
+             
+Một số lệnh cơ bản để thao tác với tệp tin và thư mục:
++ Xem danh sách các thư mục/tệp tin ở trong một đường dẫn:
+   Cú pháp: ls [tùy_chọn] [đường_dẫn]
+   Một số tùy chọn hay dùng:
+   -l hiển thị chi tiết các thông tin (phân quyền, kích thước, loại tệp/thư muc, ngày tháng tạo/chỉnh sửa).
+   -a hiển thị cả tệp tin ẩn
+   -A hiển thị tệp tin ẩn (nhưng không hiển thị . và ..)
+   -R thực hiện thao tác xem danh sách với cả các thư mục con.
+   -h hiển thị số (dung lượng) ở dạng 2K, 3.2M, 5G,...
+   -Z hiển thị các thiết lập về SELinux
+   
+   Phần "dường_dẫn" nếu không có thì thao tác xem danh sách tệp tin/thư mục sẽ thực hiện với thư mục hiện tại (thư mục đang làm việc).
++ Xem đường dẫn tới thư mục hiện tại (thư mục đang làm việc - working directory)
+    Cú pháp: pwd
++ Thay đổi thư mục làm việc
+    Cú pháp: cd đường_dẫn
+    Ví dụ:
+      cd data
+      cd /home/userA/data
++ Tạo thư mục:
+    Cú pháp: mkdir [tùy_chọn] tên_thư_mục
+    Tùy chọn hay dùng:
+        -p tạo cả cây thư mục
+    Ví dụ:
+        mkdir bai-tap
+        mkdir -p bai-kiem-tra/tuan-3
++ Di chuyển/đổi tên tệp tin/thư mục
+    Cú pháp: mv đường_dẫn_nguồn [đường_dẫn_đích]
+    Ví dụ:
+        Di chuyển thư mục "data" vào trong thư mục "bai-tap"
+            mv data bai-tap
+        Đổi tên thư mục bai-kiem-tra thành kiem-tra
+            mv bai-kiem-tra kiem-tra
+        Di chuyển thư mục kiem-tra vào trong thư mục bai-tap/tuan-3 với tên mới là "kt"
+            mv kiem-tra bai-tap/tuan-3/kt
++ Xóa tệp tin/thư mục
+    Cú pháp: rm [tùy_chọn] đường_dẫn
+    Một số tùy chọn:
+        -r xóa thư mục (xóa đệ quy)
+        -f xóa thư mục/tệp tin bắt buộc (force)
+    Ví dụ:
+        rm tep-tin.txt
+        rm -r thu-muc
+        rmdir thu-muc
++ Tạo tệp tin:
+    + Cách 1: touch ten-tep-tin
+        Sẽ tạo ra tệp tin không có nội dung gì
+    + Cách 2: sử dụng các trình soạn thảo cho chế độ dòng lệnh. Một số trình soạn thảo:
+        nano
+            Ví dụ: nano tep-tin.txt
+            Ctrl + X: Thoát khỏi trình soạn thảo nano
+            Ctrl + O: Lưu lại thay đổi
+        vi
+            Ví dụ: vi tep-tin.txt
+    + Ghi vào tệp tin sử dụng các lệnh đường ống (pipeline)
+        Ghi nội dung tạo ra từ một lệnh khác vào trong tệp tin.
+        Lệnh > tệp_tin : ghi nội dung tạo ra từ "Lệnh" vào trong "tệp_tin" (xóa nội dung cũ trong "tệp_tin" nếu có)
+        Lệnh >> tệp_tin : thêm nội dung tạo ra từ "Lệnh" vào trong "tệp_tin"
+        Lưu ý: lệnh trên chỉ ghi phần nội dung mà các chương trình/lệnh ghi ra stdout mà không ghi nội dung trong stderr ra tệp tin. Muốn ghi cả nội dung trong stderr dùng cách sau:
+            Lệnh > tệp_tin 2>&1
+            Lệnh >> tệp_tin 2>&1
+        (2>&1 có tác dụng ghi stderr vào stdout)
++ Xem nội dung tệp tin:
+    Cú pháp: cat đường_dẫn
+    "đường_dẫn" là đường dẫn tới tệp tin cần xem nội dung
+    Ví dụ:
+        cat tep-tin.txt
++ Xem một phần cuối của tệp tin:
+    Cú pháp: tail [tùy_chọn] đường_dẫn
+    Một số tùy chọn hay dùng:
+    -n num hiện số lượng dòng tính từ cuối tệp tin (mặc định là 10)
+    -f cập nhật khi tệp tin thay đổi
++ Xem một phần đầu của tệp tin:
+    Cú pháp: head [tùy_chọn] đường_dẫn
+    Một số tùy chọn hay dùng:
+    -n num hiện số lượng dòng tính từ đầu tệp tin (mặc định là 10)
++ Sao chép tệp tin hoặc thư mục:
+    Cú pháp: cp [tùy_chọn] <nguồn> <đích>
+    Tùy chọn thường dùng:
+    -r, -R dùng để thực hiện quá trình sao chép đệ quy (sao chép thư mục).
+    
+    Ví dụ:
+        cp tep-tin.txt tep-tin-sao-chep.data
+        cp -r thu-muc sao-chep-thu-muc
+        cp -R thu-muc sao-chep-thu-muc
++ Liên kết (link):
+    + Phân loại:
+        * Liên kết cứng (hard link): là một dạng đường dẫn trỏ trực tiếp đến một inode (chỉ áp dụng cho tệp tin mà không dùng được cho thư mục). Mỗi một tệp tin luôn tồn tại tối thiểu 1 hard link (đường dẫn).
+        * Liên kết tượng trưng (symbolic link): là dạng chỉ dẫn đến đường dẫn trong cây thư mục. Loại liên kết này có thể áp dụng cho cả thư mục và tệp tin. Chỉ dẫn có thể đến một tệp tin/thư mục không tồn tại hoặc đã bị xóa.
+    + Tạo liên kết:
+        Cú pháp: ln [tùy_chọn] <nguồn> <đích>
+        Các tùy chọn thường dùng:
+            -s tạo symbolic link
+            Mặc định nếu không có tham số -s thì liên kết tạo ra à liên kết cứng (hard link)
+    + Ví dụ:
+        ln -s tep-tin.txt ./lien-ket-tep-tin.txt
+        ln tep-tin.txt tep-tin-2.txt
+        ln -s thu-muc thu-muc-2
+    + Nhìn chung việc thao tác với liên kết giống như thao tác với tệp tin/thư mục thông thường.
++ Tìm kiếm:
+    + Cú pháp: find [đường_dẫn] [tùy_chọn] [biểu_thức]
+    + Một số tùy chọn
+        -type f/d/c loại là tệp tin/thư mục/character device
+        -name biểu_thức kiểm tra phần tên tệp tin
+        -iname tương tự như -name nhưng không phân biệt chữ hoa và chữ thường
+        -maxdepth levels giới hạn độ sâu tìm kiếm (levels)
+        -mindepth levels độ sâu tối thiểu của đường dẫn đến kết quả
+        
+        // Thời gian truy cập
+        -atime [+/-]n
+        -amin [+/-]n
+        -anewer filename
+        // Thời gian sửa (trạng thái tệp tin)
+        -ctime
+        -cmin
+        -cnewer filename
+        // Thời gian chỉnh sửa tệp tin (nội dung)
+        -mtime
+        -mmin
+        -mnewer filename
+        
+        -atime, -ctime, mtime : thời gian là n * 24 giờ (tính bằng ngày)
+        -amin, -cmin, -mmin : thời gian tính là n phút
+        Dấu + tức là tệp tin cũ hơn giá trị cần so sánh (lớn hơn)
+        Dấu - tức là tệp tin mới hơn giá trị cần so sánh (nhỏ hơn)
+        
+        // Sử dụng biểu thức regular expression
+        -regex pattern
+        
+        // Tìm kiếm tệp tin dựa theo inode
+        -inum inode_number
+        -samefile filename - tìm kiếm tệp tin có cùng inode với "filename"
+        
+        // Tìm kiếm dựa theo kích thước tệp tin
+        -size [+/-]n[kMG...]
+        
+    Biểu thức kiểm tra [biểu_thức]: là chuỗi ký tự với các ký tự đặc biệt đại điện:
+        * ký tự bất kỳ
+        ? đại điện cho 1 ký tự
+    Ví dụ:
+        Tìm kiếm tệp tin/thư mục có kiểu đuôi .txt
+        find -name "*.txt"
+        
+        Tìm kiếm tệp tin có kiểu đuôi .txt
+        find -type f -name "*.txt"
+        
+        Tìm kiếm tệp tin có cùng inode (là liên kết cứng tới chung một inode)
+        find -samefile tep-tin.txt
+        
+        Tìm kiếm đường dẫn có tên là os-release trong thư mục /etc
+        find /etc -name os-release
+        
+        Tìm kiếm tệp tin có kích thước lớn hơn 1G (1 Gigabyte)
+        find -size +1G
+        
+        Tìm kiếm tệp tin/thư mục chưa sửa lâu hơn 5 ngày.
+        find -mtime +5
+        
++ Lọc thông tin từ lệnh khác / tệp tin
+    Cú pháp: <lệnh> | grep [tùy_chon] [điều_kiện_lọc]
+    Một số tùy chọn:
+        -i không phân biệt hoa thường
+        -e sử dụng biểu thức regular expression
+        
+    Ví dụ:
+        Lọc dòng có chứa ".txt"
+        ls -ls | grep -i .txt
++ Hiển thị nội dung dài (phân trang)
+    Cú pháp: <lệnh> | more
+    Ví dụ:
+        ls -la | more
+    Lưu ý: Có thể thay "more" bằng "less"
+    + Dùng phím điều hướng/enter để xem tiếp nội dung
+    + Dùng phím "q" để thoát khỏi lệnh.
++ Xem đường dẫn đến lệnh/chương trình:
+    Cú pháp: whereis <tên_lệnh>
+             which <tên_lệnh>
++ Xem hướng dẫn sử dụng một lệnh:
+    Cú pháp: <tên_lệnh> --help
+             <tên_lệnh> -h
+             man <tên_lệnh>
+
++ Người dùng và phân quyền:
+    + Hệ thống Linux hỗ trợ đa nhiệm và đa người dùng.
+    + Mỗi người dùng thuộc một nhóm chính và có có thể thuộc nhiều nhóm mở rộng khác.
+    + Trong hệ thống có người dùng đặc biệt gọi là người dùng gốc (root) là người dùng có id = 0. Người dùng này có một số đặc quyền về hệ thống. Đồng thời, người dùng này cũng có thể thực hiện được một số thao tác liên quan đến quản lý người dùng và phân quyền cho tệp tin/thư mục.
+    + Người dùng thông thường có giá trị id từ 1000. Các người dùng có id nhỏ hơn 1000 thường được tạo ra để thực hiện cách dịch vụ trong hệ thống.
+    + Quyền truy cập vào tệp tin/thư mục gồm có:
+        + Quyền đọc ("r")
+        + Quyền ghi ("w")
+        + Quyền thực thi ("x"):
+            - Đối với tệp tin thì quyền này cho phép thực thi một chương trình.
+            - Đối với thư mục quyền này cho phép xem danh sách các tệp tin/thư mục bên trong.
+    + Đối với một tệp tin/thư mục các quyền này đươc chia thành 3 phần:
+        + Phần đầu tiên là các quyền đối với chủ sở hữu.
+        + Phần tiếp theo là các quyền đối với nhóm người dùng của tệp tin/thư mục đó.
+        + Phần cuối cùng là các quyền đối với người dùng khác (không phải chủ sở hữu và cũng không thuộc nhóm người dùng của tệp tin/thư mục).
+    + Lưu ý: một tệp tin/thư mục chỉ có dúng một chủ sở hữu và thuộc đúng một nhóm.
+    + Cách ký hiệu về phân quyền cho người dùng
+        Loại quyền      Đạng chữ    Dạng số
+        Quyền đọc       r           4
+        Quyền ghi       w           2
+        Quyền thực thi  x           1
+        
+    + Ví dụ:
+        rwxr-xr-x
+        Chủ sở hữu có các quyền
+            + Đọc: r
+            + Ghi: w
+            + Thực thi: x
+        Nhóm người dùng có các quyền:
+            + Đọc: r
+            + Thực thi: x
+        Người dùng khác có các quyền:
+            + Đọc: r
+            + Thực thi: x
+        Tương ứng khi biểu diễn dạng số:
+            755
+
+        rw-r--r--
+        Chủ sở hữu có các quyền:
+            + Đọc: r
+            + Ghi: w
+        Nhóm người dùng và người dùng khác chỉ có quyền:
+            + Đọc: r
+        Tương ứng khi biểu diễn dạng số:
+            644
+        
+    + Đổi dạng chữ sang dạng số chỉ cần cộng các giá trị tương ứng với các quyền của mỗi nhóm.
+    + Đổi dạng số sang dạng chữ phân tích thành các số tương ứng với các quyền hoặc đổi về dạng số nhị phân 3 bit.
+
+Thay đổi phân quyền cho tệp tin/thư mục
+    Cú pháp: chmod [tùy_chọn] <phân_quyền> <đường_dẫn>
+    Tùy chọn hay dùng:
+        -R thực hiện cho cả thư mục cũng nhưng các thành phần bên trong (thực hiện đệ quy)
+    Phần <phân_quyền> có thể biểu diễn dưới dạng số hoặc biểu diễn thay đổi bằng dạng chữ.
+    Với dạng chữ các nhóm thiết lập biểu diễn nhờ các ký hiệu sau:
+        Nhóm người dùng:
+            u : chủ sở hữu
+            g : nhóm người dùng
+            o : những người dùng khác
+            a : tất cả các người dùng
+        Thiết lập:
+            = thiết lập quyền
+            - loại bỏ quyền
+            + thêm quyền
+        Ký hiệu đặc biệt
+            X áp dụng quyền thực thi cho thư mục (không áp dụng nếu là tệp tin)
+    Ví dụ:
+        chmod 777 note2
+        chmod -R 777 data
+        chmod u=rw,g=rw,o=r note
+        chmod ug=rw,o-wx note
+        chmod -R a+rwx,o-x,o+X data
+    
+Xem thông tin tệp tin/thư mục
+    Cú pháp: stat <dường_dẫn>
+    Ví dụ: stat note2
+
+Thay đổi về chủ sở hữu và nhóm người dùng
+    Cú pháp: chown <tùy_chọn> <user>:<group>
+    Tùy chọn hay dùng:
+        -R thay đổi cả thư mục và tệp tin ở bên trong (thực hiện đệ quy)
+    Ví dụ:
+        chown -R data www:www-data
+        chown -R note2 user2
+        
+Thay đổi nhóm người dùng
+    Cú pháp: chgrp <tùy_chọn> <group>
+    Tùy chọn hay dùng:
+        -R thay đổi cả thư mục và tệp tin ở bên trong (thực hiện đệ quy)
+    Ví dụ:
+        chgrp -R data www-data
+
+Lưu ý: các lệnh thay đổi phân quyền, chủ sở hữu, nhóm người dùng phải thực hiện bởi người dùng root hoặc chủ sở hữu.
+    Với chủ sở hữu thì chỉ có thể thay đổi thành nhóm người dùng mà người đó đang thuộc nhóm đó.
+
+Lệnh thay đổi mật khẩu người dùng
+    Cú pháp: passwd [user_name]
+    Ví dụ:
+        passwd
+        passwd userA
+
+Thêm người dùng mới:
+    Cú pháp: useradd [tùy_chọn] <user_name>
+    Một số tùy chọn:
+        -d, --home thư mục HOME
+        -e, --expiredate ngày hết hạn
+        -g, --gid group
+        -G, --groups group1,[group2,...]
+    Ví dụ:
+        useradd -G users userA
+
+Thêm nhóm người dùng mới
+    Cú pháp: groupadd [tùy_chọn] group_name
+    Một số tùy chọn:
+        -g, --gid GID thiết lập ID cho group
+    Ví dụ:
+        groupadd hdhm
+
+Một số lệnh khác để thao tác với người dùng và nhóm người dùng
+    usermod - sửa thông tin người dùng
+    userdel - xóa người dùng
+    groupmod - sửa thông tin nhóm
+    groupdel - xóa nhóm người dùng
+Lưu ý: thông thường sử dụng adduser (là một script được viết hỗ trợ sử dụng các lệnh mức thấp) để tạo người dùng mới.
+
+Xem người dùng đang sử dụng hệ thống (các phiên đăng nhập):
+    Cú pháp:
+        who
+        w
+    
+Truy cập hệ thống từ xa thông qua giao thức SSH
+    Cú pháp: ssh [tùy_chọn] user@hostname
+    Tùy chọn có thể dùng:
+        -i path_to_key đường dẫn tới khóa dùng cho kết nối
+        -p PORT cổng kết nối (mặc định là 22)
+    Ví dụ:
+        ssh centos@192.168.1.23
+        ssh ec2-user@vimaru.edu.vn
+        ssh -p 3000 centos@database
+        ssh -i ~/.ssh/id_vimaru_rsa ubuntu@hoctructuyen.vimaru.edu.vn
+        
+Sao chép tệp tin qua mạng trên nền giao thức ssh
+    Cú pháp:
+        scp [tùy_chọn] src dst
+    Tùy chọn:
+        -i path_to_key
+        -p PORT
+    Đường dẫn src, dst có dạng
+        user@hostname:path/to/file
+    Ví dụ:
+        scp data.txt centos@192.168.1.23:~/
+    
+Sử dụng lệnh đồng bộ thư mục/tệp tin (rsync)
+    Cú pháp: rsync [tùy_chọn] src dst
+    Tùy chọn:
+        -a dùng để đồng bộ cả thư mục
+        -z thực hiện nén dữ liệu
+        -r thực hiện cả thư mục và các thành phần bên trong (thực hiện đệ quy)
+        -v hiển thị quá trình thực hiện.
+    Đường dẫn src, dst có cú pháp tương tự lệnh scp
+    Ví dụ:
+        rsync -avr data week
+        rsync -avrz data centos@192.168.1.23:~/
+        
+Trong trường hợp sử dụng Windows để truy cập vào các thệ thống Linux qua SSH có thể sử dụng các công cụ:
+    + Truy cập từ xa qua giao thức SSH: putty
+    + Sao chép tệp tin qua giao thức SSH: winscp
+
+Để tải một tệp tin trên web (sử dụng giao thức http) có thể sử dụng lệnh:
+    Cách 1:
+        Cú pháp: wget url_tới_tệp_tin
+        Ví dụ:
+            wget http://vimaru.edu.vn/tai-lieu/he-dieu-hanh-mang.pdf
+    Cách 2:
+        Cú pháp: curl [tùy_chọn] URL
+        Một số tùy chọn:
+            -o filename lưu dữ liệu tải về vào tệp tin.
+            -O lưu dữ liệu tải về vào tệp tin giống tên tệp tin trong đường dẫn.
+        Ví dụ:
+            wget -o he-dieu-hanh-mang.pdf http://vimaru.edu.vn/tai-lieu/he-dieu-hanh-mang.pdf
+            wget -O http://vimaru.edu.vn/tai-lieu/he-dieu-hanh-mang.pdf
+
+Lệnh thao tác với mạng:
+    Xem và thiết lập các cấu hình cho cạc mạng (giao diện mạng).
+        Đối với hệ thống cũ (sử dụng iproute):
+            ifconfig [tên_giao_diện_mạng]
+            arp - để xem bảng ARP (xem danh sách địa chỉ MAC các thiết bị cùng mạng đã từng kết nối/có thông tin)
+        Đối với các hệ thống mới (sử dụng iproute2):
+            ip address - để xem cấu hình địa chỉ 
+            ip route - để xem bảng định tuyến
+            ip neigh - để xem các thiết bị cùng mạng (cùng miền quảng bá)  
+
+Các thiết lập ổ đĩa (bộ nhớ ngoài):
+    + RAID: là kỹ thuật cho phép ghép nhiều ổ đĩa lại với nhau để tạo thành một ổ đĩa logic. Nó có thể mang lại một số lợi ích như tăng dung lượng, tăng tốc độ, tăng độ tin cậy tùy theo cách thiết lập.
+    + Một số loại RAID thường gặp:
+        + RAID 0: phân chia dữ liệu ra các ổ đĩa trong nhóm (array). Ưu điểm của cách này là tốc độ và dung lượng lưu trữ được cải thiện.
+        + RAID 1: dữ liệu sẽ được ghi thành các bản sao ở các ổ đĩa trong nhóm (array). Cách này giúp cải thiện tính tin cậy của hệ thống. Chỉ cần có 1 ổ đĩa còn dùng được thì dữ liệu vẫn còn nguyên vẹn.
+        + RAID 5: dữ liệu vẫn được chia ra để ghi trên các ổ đĩa tương tự RAID 1, tuy nhiên người ta sử dụng thêm một ổ đĩa nữa cho phép nó có thể chứa dữ liệu kiểm tra (parity) cho phép khôi phục lại dữ liệu trong trường hợp có một ổ đĩa bị lỗi mà dữ liệu vẫn đảm bảo.
+        + RAID 6: hoạt động gần tương tự như RAID 5 nhưng nó sử dụng thêm 2 ổ đĩa để ghi các dữ liệu kiểm tra/khôi phục nên nó cho phép 2 ổ đĩa có thể bị lỗi mà dữ liệu vẫn không bị mất mát.
+        + RAID 10: là loại RAID có sự kết hợp của các ổ đĩa sử dụng RAID 1 sau đó được ghép lại theo RAID 0 (RAID 1 + 0).
+        + RAID 50: là sự kết hợp của RAID 5 và RAID 0
+        + RAID 60: là sự kết hợp của RAID 6 và RAID 0
+    + JBOD (Just a Bunch of Disk): đơn thuần là các ổ đĩa được gộp lại với nhau.
+    + Để triển khai RAID có hai giải pháp:
+        + RAID mềm (soft-RAID): đây là các giải pháp triển khai với sự hỗ trợ từ phần mềm. Hầu hết nó sẽ phụ thuộc vào hệ điều hành.
+        + RAID cứng (hardware RAID): đây là giải pháp triển khai sử dụng phần cứng. Thường gọi là cạc RAID.
+            + Với RAID cứng các ổ đĩa thường sẽ được cắm vào các RAID thông qua giao tiếp SAS/SATA.
+                SAS: full-duplex
+            + Với RAID cứng thực hiện cấu hình các RAID trước khi sử dụng các ổ đĩa.
+            + Thông thường các RAID được trang bị pin (nguồn điện dự phòng) để đảm bảo dữ liệu vẫn toàn vẹn khi bị mất điện đột ngột (dùng cho duy trì dữ liệu trên bộ nhớ đệm không bị mất).
+    + Dung lượng lưu trữ dữ liệu khi thiết lập RAID:
+        + RAID 0: 
+                n x S
+            Trong đó:
+                n: số lượng ổ đĩa (trong array).
+                S: dung lượng ổ đĩa (lấy theo dung lượng ổ đĩa nhỏ nhất trong nhóm).
+        + RAID 1: 
+                S
+        + RAID 5:
+                (n - 1) x S
+        + RAID 6:
+                (n - 2) x S
+        
+    + Ví dụ: sử dụng 2 ổ đĩa có dung lượng 147GiB thiết lập RAID 0 để sử dụng sẽ lưu trữ được:
+        2 x 147GiB = 294GiB 
+    dữ liệu
+    + Lưu ý:
+        + RAID 0, RAID 1 cần sử dụng tối thiểu 2 ổ đĩa.
+        + RAID 5 cần sử dụng tối thiểu 3 ổ đĩa.
+        + RAID 6 cần sử dụng tối thiểu 4 ổ đĩa.
+    + Đối với các dạng cấu hình RAID có khả năng chịu lỗi thì khi có ổ đĩa bị lỗi thì hệ thống vẫn hoạt động nhưng ở trạng thái "suy giảm" (degrade) và cần thay thế ổ bị lỗi càng sớm càng tốt. Quá trình thiết lập lại dữ liệu cho ổ đĩa lỗi sau khi được thay thế gọi là "rebuild".
+        + Đa phần các RAID (phần cứng) đều cho phép việc tháo cắm nóng ổ cứng (hot-swap) và "rebuild" khi hệ thống đang hoạt động (không cần khởi động lại).
+        + Về mặt nguyên tắc các ổ đĩa sử dụng trong "array" không nên cùng một lô. Các ổ đĩa có thể sử dụng của các hãng khác nhau.
+        
+    + Trong Linux có giải pháp phần mềm LVM (Logical Volume Management): cho phép quản lý ổ đĩa dạng logic. Nó có thể thực hiện chức năng gần giống RAID. Nhưng có các đặc điểm:
+        + Cho phép trừu tượng hóa lớp lưu trữ. Có thể thay thế, bổ sung, mở rộng dung lượng của ổ đĩa logic bằng cách bổ sung thêm các ổ đĩa vật lý.
+        + Có thể thực hiện thiết lập gần tương tự như RAID.
+    
+    + JBOD (Just a Bunch of Disk): đơn thuần là ghép các ổ đĩa lại với nhau để luu trữ được nhiều dữ liệu hơn.
+    
+    + Có một số lệnh để thiết lập LVM trên linux:
+        pvcreate: thêm ổ đĩa vật lý vào PV (Physical Volume)
+        vgcreate: tạo một VG (Volume Group)
+        vgextend: thêm PV vào VG
+        vgdisplay: hiển thị danh sách của VG
+        lvcreate: tạo LV (Logical Volume)
+        lvresize: thay đổi kích thước LV
+        lvextend: tăng kích thước LV
+        lvreduce: giảm kích thước LV
+        lvconvert: chuyển đổi LV từ chế độ "linear" sang "mirror" hoặc "snapshot"
+        
+    + Mount ổ đĩa: là quá trình ánh xạ (gắn) một ổ đĩa (block storage) vào một điểm trong cây thư mục cho phép sử dụng (đọc/ghi/sửa/xóa):
+        Cú  pháp:
+            mount [-t type] device dir
+        Trong đó:
+            -t type là định đạng ổ đĩa (VD: ext4, zfs, xfs, ...)
+            device là đường dẫn tới ổ đĩa/phân vùng cần mount (block storage)
+            dir là đường dẫn gắn vào cây thư mục (mountpoint)
+        Ví dụ:
+            mount /dev/sdb1 /mnt/data
+    + Xem danh sách các ổ đĩa đã được mount
+        mount -l
+    + Thực hiện ngưng mount
+        unmount dir
+        dir là đường dẫn đến mountpoint
+        
+        Ví dụ:
+            unmount /mnt/data
+    + Để thực hiện quá trình mount một cách tự động thì cần thiết lập cấu hình trong tệp tin
+        /etc/fstab
+    
+Một số lệnh nén và giải nén thư mục (dùng cho sao lưu và phục hồi)
++ Lệnh tar
+    Cú pháp: tar [tùy_chọn] dir/file
+    Một số tùy chọn:
+        -a tạo bản sao lưu - tạo ra một tệp tin định dạng tar từ một thư mục.
+        -v hiển thị các thao tác được thực hiện (các tệp tin/thư mục bị tác động)
+        -f file chỉ định dữ liệu từ/ra một tệp tin
+        -x khôi phục lại dữ liệu (ngược lại với -a)
+        -c thực nén/giải nén dữ liệu
+    Ví dụ:
+        Nén một thư mục:
+            tar -acvf backup.tar.gz vidu
+            tar -avf backup.tar vidu
+        Giải nén tệp tin
+            tar -xcvf backup.tar.gz
+        
++ Có thể tham khảo thêm một số lệnh đến nén và giải nén tệp tin
+    gzip/gunzip
+    xz
+    bzip2
+
+Một số lệnh thao tác với hệ thống
++ Tắt máy
+    shutdown [tùy_chọn] [thời_gian]
+    Một số tùy chọn:
+        -h, -P, --poweroff đưa về trạng thái poweroff (tắt máy)
+        -H, --halt đưa về trạng thái halt
+        -r, --reboot để khởi động lại máy
+        -k chỉ hiện thông báo cần tắt máy (không thực hiện thao tác tắt máy)
+        -c hủy các thao tác đang chờ
+    Thời gian có dạng:
+        now - thực hiện ngay
+        +x là tắt máy sau x phút
+        hh:mm tắt máy vào thời điểm hh:mm
++ Một số lệnh tắt máy/khởi động lại máy khác
+    reboot
+    poweroff
+    systemctl poweroff
+    systemctl reboot
+    
++ Thực thi lệnh dưới quyền siêu người dùng (người dùng root)
+    sudo <lệnh>
+    Ví dụ:
+        sudo rm -rf /var/www
+        sudo vi /etc/fstab
+        sudo su
++ Lệnh chuyển đổi tài khoản
+    su user_name
+    Nếu user_name không có thì lệnh này sẽ chuyển sang tài khoản root
+
++ Thoát khỏi phiên đăng nhập hiện tại
+    exit
+
++ Xem thời gian đã hoạt động của  hệ thống
+    uptime
+
++ Xem/thiết lập ngày tháng hiện tại
+    date
+
++ Xác định thời gian thực thi của chương trình/lệnh
+    time lệnh/chương_trình
+    
++ Xem tiến trình đang hoạt động trong hệ thống
+    ps
+    Ví dụ:
+        ps -aux
+
++ Xem mức độ sử dụng bộ nhớ
+    vmstat
+    free
+
++ Xem các tiến trình sử dụng nhiều tài nguyên
+    top
+    
++ Tắt một tiến trình (gửi tín hiệu tắt)
+    kill SIGNAL PID
+    SIGNAL - là loại tín hiệu tắt (TERM, SIGKILL, ...)
+    PID là số hiệu (PID) của tiến trình đang chạy.
+    
++ Xem lại phiên đăng nhập trước đó:
+    last -x
+    
++ Xem danh sách thiết bị kết nối qua bus PCI:
+    lspci
++ Xem danh sách các thiết bị kết nối qua giao tiếp USB:
+    lsusb
++ Xem thông tin CPU:
+    lscpu
++ Xem danh sách tệp tin đang mở:
+    lsof
++ Xem danh sách các module đã được tải vào hệ thống
+    lsmod
++ Xóa module
+    rmmod
++ Kích hoạt một module
+    modprobe module_name
++ Xem thông tin nhân hệ thống (kernel)
+    Cú pháp: uname [OPTION]
+    Một số tham số:
+        -a, --all in tất cả tham số
+        -s, --kernel-name in tên kernel
+        -n, --nodename in ra hostname
+        -r, --kernel-release tên phiên bản kernel đang dùng
+        -v, --kernel-version phiên bản kernel đang dùng
+        -m, --machine in tên phần cứng
+        -p, --procesor in loại bộ xử lý (CPU)
+        -i, --hardware-platform
+        -o, --operating-system
+        
+
+    
++ Một số phím/tổ hợp phím thường dùng trên cửa sổ dòng lệnh
+    Ctrl + C : gửi tín hiệu SIGINT tới chương trình/lệnh đang chạy - ngừng chương trình đang chạy
+    Ctrl + Z : đẩy chương trình sang chế độ chạy nền (có thể tiếp tục gõ lệnh khác khi lệnh trước đó đang chạy).
+    TAB : dùng để gợi ý hoàn thành các lệnh. (TAB TAB)
+    Chuyển lệnh từ chế độ chạy nền (Ctrl + Z) sử dụng lệnh "fg" về chế độ thực thi bình thường.
+    
+
++ Lập lịch (cronjob) - thực hiện các lệnh (scripts) theo lịch định trước
+    + Mục đích: thiết lập lịch thực thi cho một chương trình một cách định kỳ.
+    + Các lệnh để thiết lập/chỉnh sửa:
+        crontab -e|-l|-r|-i -u user_name
+        -e chỉnh sửa
+        -l hiện danh sách cronjob
+        -r xóa
+        -i hỏi trước khi xóa
+        -u tên người dùng
+    + Cấu trúc tệp tin cấu hình cronjob
+        minute  hour    day_of_month    month   day_of_week     command
+        0-59    0-23    1-31            1-12    0-7             program
+        
+        
+        * day_of_week là số 0->7 (trong đó 0, 7 để đại diện cho Chủ Nhật), hoặc sử dụng dạng viết tắt MON, TUE, ...
+        * Các trường có thể dùng ký tự '-' để thể hiện khoảng thời gian liên tục; ký tự ',' để thể hiện danh sách các thời điểm; hoặc '*' thể hiện tất cả các mốc thời gian.
+        * Dòng bắt đầu bằng '#' thể hiện chú thích
+        * Một số tham số thời gian đặc biệt
+            @reboot - thực hiện khi khởi động máy
+            @yearly - thực hiện 1 năm một lần
+            @annually - thực hiện một lần mỗi năm
+            @monthly - thực hiện một lần mỗi tháng
+            @weekly - thực hiện một lần mỗi tuần
+            @daily - thực hiện hàng ngày
+            @hourly - thực hiện một lần mỗi giờ
+        
+        Ví dụ:
+        0   10-12   *   *   3   /kiem-tra.sh
+        Thực thi script "/kiem-tra.sh" vào:
+            10:00, 11:00, 12:00 của thứ 4 hàng tuần.
+        
+        @weekly /kiem-tra.sh
+        Thực thi "/kiem-tra.sh" hàng tuần (mỗi tuần một lần)
+        
+        Ví dụ:
+        15  23  1   *   *   /monthly.sh
+        
++ Shell scripts:
+    + Bản chất là tệp tin (văn bản) chứa các lệnh thực hiện theo thứ tự và một số lệnh điều kiện, vòng lặp, có biến, nhập liệu (đọc dữ liệu vào biến).
+    + Một số cách ghép lệnh trên một dòng theo điều kiện:
+        &   được thêm vào cuối lệnh để chuyển lệnh đó sang chế độ chạy nền (background)
+        &&  dùng ghép 2 lệnh với nhau và lệnh phía sau chỉ thực hiện nếu lệnh phía trước hoàn thành mà không bị lỗi.
+        ||  dùng ghép 2 lệnh với nhau và lệnh phía sau chỉ thực hiện nếu lệnh đầu bị lỗi (chỉ có 1 trong 2 lệnh được thực hiện)
+        |   pipe - chuyển stdout của lệnh phía trước (bên trái) vào stdin của lệnh phía sau (phía bên phải)
+        ;   ghép nhiều lệnh thực hiện theo thứ tự (lệnh viết trước thực hiện trước, lệnh viết sau thực hiện sau).
+        
++ Một số trình quản lý gói và cách sử dụng:
+    + Bản phân phối dựa trên Debian (Ví dụ: Debian, Ubuntu) sử dụng gói phần mềm .deb
+        + Để cài đặt sử dụng công cụ "apt"
+            apt-get update                  cập nhật thông tin về cách gói (phần mềm)
+            apt-get install package_name    cài đặt một gói
+            apt-get remove package_name     gỡ cài đặt một gói
+            apt-cache search "wildcard"     tìm kiếm gói phần mềm trong kho dữ liệu
+            apt-get upgrade                 nâng cấp (cập nhật) các gói/hệ thống
+    + Bản phân phối dựa trên Redhat (Ví dụ: RHEL, CentOS, Fedora) sử dụng định dạng gói .rpm
+        + Để cài đặt sử dụng công cụ "yum"
+            yum install package_name
+            yum remove package_name
+            yum update                      nâng cấp (cập nhật) các gói/hệ thống
+            yum search
+    + Bản phân phối của Novell: SLES, OpenSuSE cũng sử dụng định dạng gói .rpm như của Redhat, ngoài ra còn có .drpm
+        + Để quản lý gói dùng công cụ "zypper", ngoài ra còn có yast.
+            zypper in/install package_name     cài đặt gói mới
+            zypper rm/remove package_name          xóa một gói
+            zypper ref/refresh                  cập nhật thông tin về gói từ repos
+            zypper up/update                   cập nhật gói/hệ thống
+
++ DNS là dịch vụ tên miền nhằm mục đích chuyển đổi các thông tin gắn liền với tên miền. Ví dụ: địa chỉ IP gắn với tên miền, địa chỉ máy chủ email, ...
+    + Một số loại bản ghi cần lưu ý:
+        A       Địa chỉ IPv4
+        AAAA    Địa chỉ IPv6
+        TXT     Thông tin dạng văn bản (text) gắn liền với tên miền
+        MX      Địa chỉ máy chủ email
+        NS      Địa chỉ máy chủ tên miền (name server)
+        SOA     Bản ghi định nghĩa thông tin về dữ liệu liên quan đến tên miền
+        CNAME   Bản ghi thông báo nơi cần tìm kiếm thông tin về tên miền
+    + Có một phần mềm mã nguồn mở thường được sử dụng để thiết lập máy chủ tên miền là "bind".
+
++ DHCP là dịch vụ cấu hình host tự động (cấu hình động). Nó cho phép thiết lập các tham số trên host (chủ yếu là các thiết lập về mạng).
+    + Có một số công cụ triển khai DHCP server: isc-dhcp, kea-dhcp
+    
++ Dịch vụ máy chủ web:
+    + Có một số gói/phần mềm hay dùng:
+        + apache + php
+        + nginx
++ Cân bằng tải:
+    + HAproxy (L3, http)
+    + nginx (chuyên cho web - http)
++ Một vài CSDL phổ biến:
+    + MySQL/Mariadb
+    + PostgreSQL
+    + Mongodb
+    + Redis
+    + Memcache
+
+
+    
+
+
+
+
+    
+
+
+
+            
+    
+    
+    
+
+
+    
